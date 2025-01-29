@@ -54,7 +54,7 @@ class Rubric(Block):
         thead = etree.SubElement(block, 'thead')
         tr = etree.SubElement(thead, 'tr')
         th = etree.SubElement(tr, 'th')
-        for level in self.data['levels']:
+        for level in self.data.get('levels', []):
             th = etree.SubElement(tr, 'th')
             self.handle_level(th, level)
 
@@ -74,7 +74,7 @@ class Rubric(Block):
 
     def handle_criteria(self, block):
         tbody = etree.SubElement(block, 'tbody')
-        for criterion in self.data['criteria']:
+        for criterion in self.data.get('criteria', []):
             tr = etree.SubElement(tbody, 'tr')
             td = etree.SubElement(tr, 'td')
             title = etree.SubElement(td, 'div', {'class': 'rubric__criteria-title'})
@@ -87,7 +87,7 @@ class Rubric(Block):
                 score = etree.SubElement(td, 'div', {'class': 'rubric__criteria-score'})
                 score.text = criterion['score']
 
-            for level in criterion['levels']:
+            for level in criterion.get('levels', []):
                 self.handle_criterion_level(tr, level)
 
     def handle_criterion_level(self, block, level):

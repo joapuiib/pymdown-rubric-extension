@@ -1,6 +1,72 @@
 import markdown
 import textwrap
 
+def test_empty_rubric():
+    extensions = ['rubric']
+    extension_configs = {}
+    md = markdown.Markdown(extensions=extensions, extension_configs=extension_configs)
+
+    markdown_text = R'''
+    /// rubric
+    ///
+    '''
+
+    expected_html = R'''
+    '''
+
+    markdown_text = textwrap.dedent(markdown_text).strip()
+    expected_html = textwrap.dedent(expected_html).strip()
+
+    html = md.convert(markdown_text)
+    assert html == expected_html
+
+def test_add_classes():
+    extensions = ['rubric']
+    extension_configs = {'rubric': {'classes': 'my-class'}}
+    md = markdown.Markdown(extensions=extensions, extension_configs=extension_configs)
+
+    markdown_text = R'''
+    /// rubric
+    levels:
+      - Excellent
+
+    criteria:
+      - title: Clarity
+        description: The writing is clear and easy to understand.
+        levels:
+          - The writing is excellent.
+    ///
+    '''
+
+    expected_html = R'''
+    <table class="my-class">
+    <thead>
+    <tr>
+    <th></th>
+    <th>
+    <div class="rubric__level-title">Excellent</div>
+    </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>
+    <div class="rubric__criteria-title">Clarity</div>
+    <div class="rubric__criteria-description">The writing is clear and easy to understand.</div>
+    </td>
+    <td class="rubric__criteria-element">
+    <div class="rubric__criteria-element-description">The writing is excellent.</div>
+    </td>
+    </tr>
+    </tbody>
+    </table>
+    '''
+
+    markdown_text = textwrap.dedent(markdown_text).strip()
+    expected_html = textwrap.dedent(expected_html).strip()
+
+    html = md.convert(markdown_text)
+    assert html == expected_html
 def test_basic_rubric():
     extensions = ['rubric']
     extension_configs = {}
