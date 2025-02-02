@@ -12,6 +12,7 @@ def test_empty_rubric():
     '''
 
     expected_html = R'''
+    <table></table>
     '''
 
     markdown_text = textwrap.dedent(markdown_text).strip()
