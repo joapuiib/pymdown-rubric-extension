@@ -30,9 +30,9 @@ def test_basic_rubric():
     markdown_text = R'''
     /// rubric
     levels:
-      - Excellent
-      - Good
-      - Acceptable
+      - "__Excellent__"
+      - "`Good`"
+      - "[Acceptable](#acceptable)"
       - Poor
 
     criteria:
@@ -52,13 +52,13 @@ def test_basic_rubric():
     <tr>
     <th></th>
     <th>
-    <div class="rubric__level-title">Excellent</div>
+    <div class="rubric__level-title"><strong>Excellent</strong></div>
     </th>
     <th>
-    <div class="rubric__level-title">Good</div>
+    <div class="rubric__level-title"><code>Good</code></div>
     </th>
     <th>
-    <div class="rubric__level-title">Acceptable</div>
+    <div class="rubric__level-title"><a href="#acceptable">Acceptable</a></div>
     </th>
     <th>
     <div class="rubric__level-title">Poor</div>
