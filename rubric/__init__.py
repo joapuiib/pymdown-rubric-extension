@@ -4,7 +4,7 @@ import yaml
 from pymdownx.blocks import BlocksExtension
 from pymdownx.blocks.block import Block, type_html_identifier
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 class Rubric(Block):
