@@ -4,7 +4,7 @@ import yaml
 from pymdownx.blocks import BlocksExtension
 from pymdownx.blocks.block import Block, type_html_identifier
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 class Rubric(Block):
@@ -20,6 +20,8 @@ class Rubric(Block):
         self.classes = config['classes']
         if type(self.classes) is list:
             self.classes = ' '.join(self.classes)
+
+        self.rubric = {}
 
         super().__init__(length, tracker, md, config)
 
@@ -40,25 +42,28 @@ class Rubric(Block):
         self.parse_rubric(block.text)
         block.text = ""
 
-        self.handle_levels(block)
-        self.handle_criteria(block)
+        self.render_levels(block)
+        self.render_criteria(block)
 
         return block
 
     def parse_rubric(self, text):
         """Parse rubric."""
 
-        self.data = yaml.safe_load(text)
+        self.rubric = yaml.safe_load(text) or {}
 
-    def handle_levels(self, block):
+    def render_levels(self, block):
+        if 'levels' not in self.rubric:
+            return
+
         thead = etree.SubElement(block, 'thead')
         tr = etree.SubElement(thead, 'tr')
         th = etree.SubElement(tr, 'th')
-        for level in self.data['levels']:
+        for level in self.rubric.get('levels', []):
             th = etree.SubElement(tr, 'th')
-            self.handle_level(th, level)
+            self.render_level(th, level)
 
-    def handle_level(self, block, level):
+    def render_level(self, block, level):
         if type(level) is str:
             title = level
             score = None
@@ -72,9 +77,12 @@ class Rubric(Block):
             score_el = etree.SubElement(block, 'div', {'class': 'rubric__level-score'})
             score_el.text = score
 
-    def handle_criteria(self, block):
+    def render_criteria(self, block):
+        if 'criteria' not in self.rubric:
+            return
+
         tbody = etree.SubElement(block, 'tbody')
-        for criterion in self.data['criteria']:
+        for criterion in self.rubric.get('criteria', []):
             tr = etree.SubElement(tbody, 'tr')
             td = etree.SubElement(tr, 'td')
             title = etree.SubElement(td, 'div', {'class': 'rubric__criteria-title'})
@@ -87,10 +95,10 @@ class Rubric(Block):
                 score = etree.SubElement(td, 'div', {'class': 'rubric__criteria-score'})
                 score.text = criterion['score']
 
-            for level in criterion['levels']:
-                self.handle_criterion_level(tr, level)
+            for level in criterion.get('levels', []):
+                self.render_criterion_level(tr, level)
 
-    def handle_criterion_level(self, block, level):
+    def render_criterion_level(self, block, level):
         if type(level) is str:
             title = level
             score = None

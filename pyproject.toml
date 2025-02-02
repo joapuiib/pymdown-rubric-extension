@@ -16,7 +16,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "pymdown-extensions>=10.12",
+    "pymdown-extensions>=10.14.3",
     "Markdown>=3.6",
     "pyyaml"
 ]
